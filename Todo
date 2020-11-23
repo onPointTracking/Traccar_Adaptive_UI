@@ -1,0 +1,20 @@
+Application Parts :
+        [X]  login part 
+        []  Sidebar ---> [X] Show status 
+                         [X] Devices List
+                         [] One Device Detail 
+                         [X] Add Device
+                         [X] Edit Device 
+                         [] Show Data --> [X] Event Input , [X] History Input , [X]Stops Input
+        [] Main --> [X] Leaflet Map
+                    [X] Map Box Map
+                    [] Events List 
+                    [] History List
+                    [] Stops List
+
+    parts Needed to be added :  profile in Sidebar , notifications List in Sidebar
+
+
+
+Application Functionalities :
+
