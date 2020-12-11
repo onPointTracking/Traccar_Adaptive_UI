@@ -102,7 +102,6 @@ const Title = styled.p`
   padding-bottom: 0.8rem;
   border-bottom: 1px solid #f3f3f3;
 `;
-
 const Form = styled.form`
   display: flex;
   flex-direction: column;
