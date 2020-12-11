@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+
 const Events = () => {
+  let myTable = new Array();
+  for (var i = 0; i < 50; i++) {
+    myTable.push(["obj"]);
+  }
   return (
     <Container>
       <Header>
@@ -16,76 +21,15 @@ const Events = () => {
             <TableHeaderElement>Geofence ID</TableHeaderElement>
             <TableHeaderElement>Type</TableHeaderElement>
           </TableHeader>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
-          <Row>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value</RowElement>
-            <RowElement>value </RowElement>
-          </Row>
+          {myTable.map((row) => (
+            <Row>
+              <RowElement>value</RowElement>
+              <RowElement>value</RowElement>
+              <RowElement>value</RowElement>
+              <RowElement>value</RowElement>
+              <RowElement>value </RowElement>
+            </Row>
+          ))}
         </Table>
       </TableContainer>
     </Container>
@@ -93,10 +37,14 @@ const Events = () => {
 };
 
 const Container = styled.div`
-  height: 100%;
+  height: 80vh;
   width: 80%;
   margin: 0 auto;
   justify-content: center;
+  @media (max-width: 900px) {
+    height: 30vh;
+    margin-bottom: 4rem;
+  }
 `;
 const Header = styled.div`
   display: flex;
@@ -122,7 +70,7 @@ const ShowInMapButton = styled.h2`
 `;
 const TableContainer = styled.div`
   overflow-y: scroll;
-  height: 300px;
+  height: 100%;
 `;
 const Table = styled.table`
   width: 100%;
