@@ -1,92 +1,95 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, {useState} from "react";
+import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
-import { Data, runquery } from "../../features/devicesSlice";
+import {Data, runquery} from "../../features/devicesSlice";
+import {newdevice} from "../../features/appSlice";
 
 const EventsForm = () => {
-  // [X] get all devices and set value of options to id
-  const devices = useSelector(Data);
-  const dispatch = useDispatch();
-  dispatch(runquery([]));
-  const [deviceId, setDeviceId] = useState();
+    // [X] get all devices and set value of options to id
+    const devices = useSelector(Data);
+    const dispatch = useDispatch();
+    dispatch(runquery([]));
+    const [deviceId, setDeviceId] = useState(devices.length > 0 ? devices[devices.length - 1].id : "");
 
-  if (devices.length > 0) {
-    //   setDeviceId(devices[0].id);
-  }
-  // [X] creat State vars and updatethem when select
-  const [period, setPeriod] = useState("today");
-  const [group, setGroup] = useState("");
+    // [X] creat State vars and updatethem when select
+    const [period, setPeriod] = useState("today");
+    const [group, setGroup] = useState("");
 
-  const handleDeviceChange = (event) => {
-    setDeviceId(event.target.value);
-  };
+    const handleDeviceChange = (event) => {
+        setDeviceId(event.target.value);
+    };
 
-  const handlePeriodChange = (event) => {
-    setPeriod(event.target.value);
-  };
+    const handlePeriodChange = (event) => {
+        setPeriod(event.target.value);
+    };
 
-  const handleGroupChange = (event) => {
-    setGroup(event.target.value);
-  };
+    const handleGroupChange = (event) => {
+        setGroup(event.target.value);
+    };
 
-  const handelPassData = () => {
-    // [X] pass data to Slice
-    dispatch(runquery([deviceId, period]));
-  };
-  // Select Form Style
-  const selectStyle = {
-    width: "100%",
-    backgroundColor: "#f3f3f3",
-    padding: "0.7rem",
-    marginBottom: "10px",
-    borderRadius: "10px",
-    fontFamily: "Roboto",
-    fontSize: "14px",
-    fontWeight: "300",
-    color: "#777777",
-    border: "none",
-  };
+    const handelPassData = () => {
+        // [X] pass data to Slice
+        dispatch(runquery([deviceId, period]));
+    };
+    // Select Form Style
+    const selectStyle = {
+        width: "100%",
+        backgroundColor: "#f3f3f3",
+        padding: "0.7rem",
+        marginBottom: "10px",
+        borderRadius: "10px",
+        fontFamily: "Roboto",
+        fontSize: "14px",
+        fontWeight: "300",
+        color: "#777777",
+        border: "none",
+    };
 
-  return (
-    <Container>
-      <Title>Form :</Title>
-      <Form>
-        <p>Select device :</p>
-        <select style={selectStyle} onChange={handleDeviceChange}>
-          {devices.length > 0 ? (
-            devices.map((device) => (
-              <option selected value={device.id}>
-                {device.name}
-              </option>
-            ))
-          ) : (
-            <></>
-          )}
-        </select>
-        <p>Select Period :</p>
-        <select style={selectStyle} onChange={handlePeriodChange}>
-          <option selected value="today">
-            Today
-          </option>
-          <option value="yesterday">Yesterday</option>
-          <option value="thisWeek">This Week</option>
-          <option value="previousWeek">Previous Week</option>
-          <option value="thisMonth">This Month</option>
-          <option value="previousMonth">Previous Month</option>
-        </select>
-        <p>Select Group :</p>
-        <select style={selectStyle} onChange={handleGroupChange}>
-          <option selected value="1">
-            1
-          </option>
-          <option value="2">2</option>
-        </select>
-        <button type="submit" onClick={handelPassData}>
-          Show Events
-        </button>
-      </Form>
-    </Container>
-  );
+    return (
+        <Container>
+
+            {devices.length > 0 ? (<><Title>Form :</Title>
+                <Form>
+                    <p>Select device :</p>
+                    <select style={selectStyle} onChange={handleDeviceChange}>
+                        {devices.length > 0 ? (
+                            devices.map((device) => (
+                                <option selected value={device.id}>
+                                    {device.name}
+                                </option>
+                            ))
+                        ) : (
+                            <></>
+                        )}
+                    </select>
+                    <p>Select Period :</p>
+                    <select style={selectStyle} onChange={handlePeriodChange}>
+                        <option selected value="today">
+                            Today
+                        </option>
+                        <option value="yesterday">Yesterday</option>
+                        <option value="thisWeek">This Week</option>
+                        <option value="previousWeek">Previous Week</option>
+                        <option value="thisMonth">This Month</option>
+                        <option value="previousMonth">Previous Month</option>
+                    </select>
+                    <p>Select Group :</p>
+                    <select style={selectStyle} onChange={handleGroupChange}>
+                        <option selected value="1">
+                            1
+                        </option>
+                        <option value="2">2</option>
+                    </select>
+                    <button type="submit" onClick={handelPassData}>
+                        Show Events
+                    </button>
+                </Form></>) : (<>
+                <Title>No Devices Detected</Title>
+                <AddDeviceButton onClick={() => dispatch(newdevice())}>Add Device</AddDeviceButton>
+            </>)}
+
+        </Container>
+    );
 };
 const Container = styled.div`
   padding: 1rem;
@@ -139,4 +142,17 @@ const Input = styled.input`
   border: none;
   margin-bottom: 10px;
 `;
+const AddDeviceButton = styled.h1`border-radius: 5px;
+    font-family: "Roboto";
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #29badf;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    text-align : center;
+    &:hover {
+      background-color: #06094c;
+    }`
 export default EventsForm;
