@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import SecondaryNavbar from "./SecondaryNavbar";
 import LiveStatus from "./sidebar-components/LiveStatus";
@@ -9,45 +9,45 @@ import DeviceDetails from "./sidebar-components/DeviceDetails";
 import EventsForm from "./sidebar-components/EventsForm";
 import HistoryForm from "./sidebar-components/HistoryForm";
 import StopsForm from "./sidebar-components/StopsForm";
-import { useSelector } from "react-redux";
-import { selectApp } from "../features/appSlice";
+import {useSelector} from "react-redux";
+import {selectApp} from "../features/appSlice";
 
 function SideBarComponentSwitcher(state) {
-  switch (state) {
-    case 0:
-      return <LiveStatus />;
-    case 1:
-      return <AddDevice />;
-    case 2:
-      return <DevicesList />;
-    case 3:
-      return <DeviceDetails />;
-    case 4:
-      return <EventsForm />;
-    case 5:
-      return <EditDevice />;
-    case 6:
-      return <HistoryForm />;
-    case 7:
-      return null;
-    case 8:
-      return <StopsForm />;
-    default:
-      return <LiveStatus />;
-  }
+    switch (state) {
+        case 0:
+            return <LiveStatus/>;
+        case 1:
+            return <AddDevice/>;
+        case 2:
+            return <DevicesList/>;
+        case 3:
+            return <DeviceDetails/>;
+        case 4:
+            return <EventsForm/>;
+        case 5:
+            return <EditDevice/>;
+        case 6:
+            return <HistoryForm/>;
+        case 7:
+            return null;
+        case 8:
+            return <StopsForm/>;
+        default:
+            return <LiveStatus/>;
+    }
 }
 
 const SideBar = () => {
-  const state = useSelector(selectApp);
-  useEffect(() => {
-    SideBarComponentSwitcher(state);
-  }, [state]);
-  return (
-    <Container>
-      <SecondaryNavbar />
-      {SideBarComponentSwitcher(state)}
-    </Container>
-  );
+    const state = useSelector(selectApp);
+    useEffect(() => {
+        SideBarComponentSwitcher(state);
+    }, [state]);
+    return (
+        <Container>
+            <SecondaryNavbar/>
+            {SideBarComponentSwitcher(state)}
+        </Container>
+    );
 };
 
 const Container = styled.div`

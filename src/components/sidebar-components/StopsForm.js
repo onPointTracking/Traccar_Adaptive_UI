@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import {Data, runquery} from "../../features/devicesSlice";
-import {newdevice} from "../../features/appSlice";
+import {stops ,newdevice} from "../../features/appSlice";
 
 const StopsForm = () => {
     // [X] get all devices and set value of options to id
@@ -24,6 +24,7 @@ const StopsForm = () => {
     const handelPassData = () => {
         // [X] pass data to Slice
         dispatch(runquery([deviceId, period]));
+        dispatch(stops())
     };
     // Select Form Style
     const selectStyle = {
@@ -89,7 +90,7 @@ const Container = styled.div`
 `;
 const Title = styled.p`
   font-family: "Roboto";
-  font-size: 14 px;
+  font-size: 14px;
   font-weight: bold;
   color: #3e3e46;
   width: 100%;
@@ -99,6 +100,7 @@ const Title = styled.p`
 const Form = styled.form`
   display: flex;
   flex-direction: column;
+
   button {
     border-radius: 5px;
     font-family: "Roboto";
@@ -109,10 +111,12 @@ const Form = styled.form`
     border: none;
     padding: 0.5rem;
     cursor: pointer;
+
     &:hover {
       background-color: #06094c;
     }
   }
+
   p {
     font-family: "Roboto";
     font-size: 14px;
@@ -122,16 +126,17 @@ const Form = styled.form`
   }
 `;
 const AddDeviceButton = styled.h1`border-radius: 5px;
-    font-family: "Roboto";
-    font-size: 16px;
-    font-weight: 700;
-    color: #fff;
-    background-color: #29badf;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-    text-align : center;
-    &:hover {
-      background-color: #06094c;
-    }`
+  font-family: "Roboto";
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background-color: #29badf;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  text-align: center;
+
+  &:hover {
+    background-color: #06094c;
+  }`
 export default StopsForm;

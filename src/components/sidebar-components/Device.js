@@ -13,8 +13,7 @@ const Device = ({ id, name, status, speed, uniqueId }) => {
 
   const HandleDelete = async () => {
     // Delete Object Using it's Id
-    console.log("Delete Clicked");
-    console.log(id);
+
     const url = "api/devices/" + id;
     const response = await fetch(url, {
       method: "DELETE",

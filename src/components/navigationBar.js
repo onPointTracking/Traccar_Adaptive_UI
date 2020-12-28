@@ -8,7 +8,7 @@ import {
   events,
   history,
   diagrmas,
-  rapports,
+  stops,
   mainEvents,
   mainHistory,
   mainMap,
@@ -66,7 +66,7 @@ const NavigationBar = () => {
         <NavEle
           onClick={() => {
             setisOpen(!isOpen);
-            dispatch(rapports());
+            dispatch(stops());
           }}
         >
           Stops

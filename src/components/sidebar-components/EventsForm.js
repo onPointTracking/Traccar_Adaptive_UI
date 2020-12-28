@@ -2,7 +2,8 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import {Data, runquery} from "../../features/devicesSlice";
-import {newdevice} from "../../features/appSlice";
+import {events, newdevice} from "../../features/appSlice";
+
 
 const EventsForm = () => {
     // [X] get all devices and set value of options to id
@@ -30,6 +31,8 @@ const EventsForm = () => {
     const handelPassData = () => {
         // [X] pass data to Slice
         dispatch(runquery([deviceId, period]));
+        dispatch(events());
+
     };
     // Select Form Style
     const selectStyle = {

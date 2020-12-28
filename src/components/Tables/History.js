@@ -1,18 +1,91 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
+import {useSelector} from "react-redux";
+import {QueryData} from "../../features/devicesSlice";
+import moment from "moment";
+
+function timeParser(time_name) {
+  const from = moment().subtract(1, "hour");
+  const to = moment();
+  let selectedFrom;
+  let selectedTo;
+  switch (time_name) {
+    case "today":
+      selectedFrom = moment().startOf("day");
+      selectedTo = moment().endOf("day");
+      break;
+    case "yesterday":
+      selectedFrom = moment().subtract(1, "day").startOf("day");
+      selectedTo = moment().subtract(1, "day").endOf("day");
+      break;
+    case "thisWeek":
+      selectedFrom = moment().startOf("week");
+      selectedTo = moment().endOf("week");
+      break;
+    case "previousWeek":
+      selectedFrom = moment().subtract(1, "week").startOf("week");
+      selectedTo = moment().subtract(1, "week").endOf("week");
+      break;
+    case "thisMonth":
+      selectedFrom = moment().startOf("month");
+      selectedTo = moment().endOf("month");
+      break;
+    case "previousMonth":
+      selectedFrom = moment().subtract(1, "month").startOf("month");
+      selectedTo = moment().subtract(1, "month").endOf("month");
+      break;
+    default:
+      selectedFrom = from;
+      selectedTo = to;
+      break;
+  }
+  return [selectedFrom, selectedTo]
+}
 
 const History = () => {
-  let myTable = new Array();
-  for (var i = 0; i < 50; i++) {
-    myTable.push(["obj"]);
+  const [queryRespond, setQueryRespond] = useState([]);
+  const IncomingData = useSelector(QueryData);
+  let id = null;
+  let selectedFrom = null;
+  let selectedTo = null;
+  if (IncomingData.length > 0) {
+    id = IncomingData[0]
+    const time = timeParser(IncomingData[1])
+    selectedFrom = time[0]
+    selectedTo = time[1]
   }
+
+  if (id) {
+    // GET EVENTS
+    const query = new URLSearchParams({
+      deviceId: id,
+      from: selectedFrom.toISOString(),
+      to: selectedTo.toISOString(),
+    });
+
+    let promise = fetch(`/api/reports/route?${query.toString()}`, {
+      headers: {Accept: "application/json"},
+    })
+    promise.then((response) => {
+      if (response.ok) {
+        response.json().then(setQueryRespond);
+      }
+    })
+    promise.catch((err) => {
+      console.log(err)
+    });
+  }
+
+
   return (
     <Container>
       <Header>
         <HeaderTitle>History :</HeaderTitle>
         <ShowInMapButton> Show In Map</ShowInMapButton>
       </Header>
-      <TableContainer>
+      {queryRespond.length > 0 ?
+
+          <TableContainer>
         <Table>
           <TableHeader>
             <TableHeaderElement>Time</TableHeaderElement>
@@ -21,17 +94,19 @@ const History = () => {
             <TableHeaderElement>Speed</TableHeaderElement>
             <TableHeaderElement>Address</TableHeaderElement>
           </TableHeader>
-          {myTable.map((row) => (
+          {queryRespond.map((row) => (
             <Row>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value </RowElement>
+              <RowElement>{row.fixTime}</RowElement>
+              <RowElement>{row.latitude}</RowElement>
+              <RowElement>{row.longitude}</RowElement>
+              <RowElement>{row.speed}</RowElement>
+              <RowElement>{row.address}</RowElement>
             </Row>
           ))}
         </Table>
       </TableContainer>
+          : <p>No History</p>}
+
     </Container>
   );
 };

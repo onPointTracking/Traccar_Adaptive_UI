@@ -22,7 +22,7 @@ function DisplayMap(mapName, data) {
 }
 
 const MapsContainer = () => {
-  const [whichMap, SetwitchMap] = useState("mapgl");
+  const [whichMap, SetwitchMap] = useState("leaflet");
   const handleMapChange = (event) => {
     SetwitchMap(event.target.value);
   };
@@ -45,6 +45,7 @@ const MapsContainer = () => {
   useEffect(() => {
     DisplayMap(whichMap);
   }, [whichMap]);
+
   return (
     <>
       {/* <ToggleWrapper className="leaflet-top leaflet-right">

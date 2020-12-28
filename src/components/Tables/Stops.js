@@ -1,39 +1,115 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
+import moment from "moment";
+import {useSelector} from "react-redux";
+import {QueryData} from "../../features/devicesSlice";
+
+
+function timeParser(time_name) {
+    const from = moment().subtract(1, "hour");
+    const to = moment();
+    let selectedFrom;
+    let selectedTo;
+    switch (time_name) {
+        case "today":
+            selectedFrom = moment().startOf("day");
+            selectedTo = moment().endOf("day");
+            break;
+        case "yesterday":
+            selectedFrom = moment().subtract(1, "day").startOf("day");
+            selectedTo = moment().subtract(1, "day").endOf("day");
+            break;
+        case "thisWeek":
+            selectedFrom = moment().startOf("week");
+            selectedTo = moment().endOf("week");
+            break;
+        case "previousWeek":
+            selectedFrom = moment().subtract(1, "week").startOf("week");
+            selectedTo = moment().subtract(1, "week").endOf("week");
+            break;
+        case "thisMonth":
+            selectedFrom = moment().startOf("month");
+            selectedTo = moment().endOf("month");
+            break;
+        case "previousMonth":
+            selectedFrom = moment().subtract(1, "month").startOf("month");
+            selectedTo = moment().subtract(1, "month").endOf("month");
+            break;
+        default:
+            selectedFrom = from;
+            selectedTo = to;
+            break;
+    }
+    return [selectedFrom, selectedTo]
+}
 
 const Stops = () => {
-  let myTable = new Array();
-  for (var i = 0; i < 50; i++) {
-    myTable.push(["obj"]);
-  }
-  return (
-    <Container>
-      <Header>
-        <HeaderTitle>Stops :</HeaderTitle>
-        <ShowInMapButton> Show In Map</ShowInMapButton>
-      </Header>
-      <TableContainer>
-        <Table>
-          <TableHeader>
-            <TableHeaderElement>Start Time</TableHeaderElement>
-            <TableHeaderElement>End Time</TableHeaderElement>
-            <TableHeaderElement>Fuel Spend</TableHeaderElement>
-            <TableHeaderElement>Duration</TableHeaderElement>
-            <TableHeaderElement>Engine Hours</TableHeaderElement>
-          </TableHeader>
-          {myTable.map((row) => (
-            <Row>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value </RowElement>
-            </Row>
-          ))}
-        </Table>
-      </TableContainer>
-    </Container>
-  );
+    const [queryRespond, setQueryRespond] = useState([]);
+    const IncomingData = useSelector(QueryData);
+    let id = null;
+    let selectedFrom = null;
+    let selectedTo = null;
+    if (IncomingData.length > 0) {
+        id = IncomingData[0]
+        const time = timeParser(IncomingData[1])
+        selectedFrom = time[0]
+        selectedTo = time[1]
+    }
+
+    if (id) {
+        // GET EVENTS
+        const query = new URLSearchParams({
+            deviceId: id,
+            from: selectedFrom.toISOString(),
+            to: selectedTo.toISOString(),
+        });
+
+        let promise = fetch(`/api/reports/stops?${query.toString()}`, {
+            headers: {Accept: "application/json"},
+        })
+        promise.then((response) => {
+            if (response.ok) {
+                response.json().then(setQueryRespond);
+            }
+        })
+        promise.catch((err) => {
+            console.log(err)
+        });
+    }
+
+
+    return (
+        <Container>
+            <Header>
+                <HeaderTitle>Stops :</HeaderTitle>
+                <ShowInMapButton> Show In Map</ShowInMapButton>
+            </Header>
+            {queryRespond.length > 0 ?
+
+                <TableContainer>
+                    <Table>
+                        <TableHeader>
+                            <TableHeaderElement>Start Time</TableHeaderElement>
+                            <TableHeaderElement>End Time</TableHeaderElement>
+                            <TableHeaderElement>Fuel Spent</TableHeaderElement>
+                            <TableHeaderElement>Duration</TableHeaderElement>
+                            <TableHeaderElement>Engine Hours</TableHeaderElement>
+                        </TableHeader>
+                        {queryRespond.map((row) => (
+                            <Row>
+                                <RowElement>{row.startTime}</RowElement>
+                                <RowElement>{row.endTime}</RowElement>
+                                <RowElement>{row.spentFuel}</RowElement>
+                                <RowElement>{row.duration}</RowElement>
+                                <RowElement>{row.engineHours}</RowElement>
+                            </Row>
+                        ))}
+                    </Table>
+                </TableContainer>
+                : <p>No Stops</p>}
+
+        </Container>
+    );
 };
 
 const Container = styled.div`

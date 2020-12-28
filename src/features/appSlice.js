@@ -33,7 +33,7 @@ export const AppSlice = createSlice({
     diagrmas: (state) => {
       state.stat = 7;
     },
-    rapports: (state) => {
+    stops: (state) => {
       state.stat = 8;
     },
     mainMap: (state) => {
@@ -60,7 +60,7 @@ export const {
   history,
   editdevice,
   diagrmas,
-  rapports,
+  stops,
   mainMap,
   mainEvents,
   mainHistory,

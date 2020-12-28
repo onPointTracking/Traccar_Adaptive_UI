@@ -1,39 +1,120 @@
-import React from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
+import {useSelector} from "react-redux";
+import {QueryData} from "../../features/devicesSlice";
+import moment from "moment";
+
+function timeParser(time_name) {
+    const from = moment().subtract(1, "hour");
+    const to = moment();
+    let selectedFrom;
+    let selectedTo;
+    switch (time_name) {
+        case "today":
+            selectedFrom = moment().startOf("day");
+            selectedTo = moment().endOf("day");
+            break;
+        case "yesterday":
+            selectedFrom = moment().subtract(1, "day").startOf("day");
+            selectedTo = moment().subtract(1, "day").endOf("day");
+            break;
+        case "thisWeek":
+            selectedFrom = moment().startOf("week");
+            selectedTo = moment().endOf("week");
+            break;
+        case "previousWeek":
+            selectedFrom = moment().subtract(1, "week").startOf("week");
+            selectedTo = moment().subtract(1, "week").endOf("week");
+            break;
+        case "thisMonth":
+            selectedFrom = moment().startOf("month");
+            selectedTo = moment().endOf("month");
+            break;
+        case "previousMonth":
+            selectedFrom = moment().subtract(1, "month").startOf("month");
+            selectedTo = moment().subtract(1, "month").endOf("month");
+            break;
+        default:
+            selectedFrom = from;
+            selectedTo = to;
+            break;
+    }
+    return [selectedFrom, selectedTo]
+}
+
 
 const Events = () => {
-  let myTable = new Array();
-  for (var i = 0; i < 50; i++) {
-    myTable.push(["obj"]);
-  }
-  return (
-    <Container>
-      <Header>
-        <HeaderTitle>Events :</HeaderTitle>
-        <ShowInMapButton> Show In Map</ShowInMapButton>
-      </Header>
-      <TableContainer>
-        <Table>
-          <TableHeader>
-            <TableHeaderElement>Device</TableHeaderElement>
-            <TableHeaderElement>Server Time</TableHeaderElement>
-            <TableHeaderElement>Position ID</TableHeaderElement>
-            <TableHeaderElement>Geofence ID</TableHeaderElement>
-            <TableHeaderElement>Type</TableHeaderElement>
-          </TableHeader>
-          {myTable.map((row) => (
-            <Row>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value</RowElement>
-              <RowElement>value </RowElement>
-            </Row>
-          ))}
-        </Table>
-      </TableContainer>
-    </Container>
-  );
+    const [queryRespond, setQueryRespond] = useState([]);
+    const [devicePars, setDevicePars] = useState("")
+    const IncomingData = useSelector(QueryData);
+    let id = null;
+    let selectedFrom = null;
+    let selectedTo = null;
+
+    if (IncomingData.length > 0) {
+        id = IncomingData[0]
+        const time = timeParser(IncomingData[1])
+        selectedFrom = time[0]
+        selectedTo = time[1]
+    }
+
+
+    if (id) {
+        const url = "api/devices/" + id;
+        // GET DEVICE INFO
+        fetch(url).then((response) => {
+            if (response.ok) {
+                response.json().then(setDevicePars)
+            }
+        })
+        // GET EVENTS
+        const query = new URLSearchParams({
+            deviceId: id,
+            from: selectedFrom.toISOString(),
+            to: selectedTo.toISOString(),
+        });
+
+        fetch(`/api/reports/events?${query.toString()}`, {
+            headers: {Accept: "application/json"},
+        }).then((response) => {
+            if (response.ok) {
+                response.json().then(setQueryRespond);
+            }
+        });
+    }
+
+    return (
+        <Container>
+            <Header>
+                <HeaderTitle>Events :</HeaderTitle>
+                <ShowInMapButton> Show In Map</ShowInMapButton>
+            </Header>
+            {queryRespond.length > 0 ?
+                <TableContainer>
+                    <Table>
+                        <TableHeader>
+                            <TableHeaderElement>Device</TableHeaderElement>
+                            <TableHeaderElement>Server Time</TableHeaderElement>
+                            <TableHeaderElement>Position ID</TableHeaderElement>
+                            <TableHeaderElement>Geofence ID</TableHeaderElement>
+                            <TableHeaderElement>Type</TableHeaderElement>
+                        </TableHeader>
+                        {queryRespond.map((row) => (
+                            <Row>
+                                <RowElement>{devicePars.name}</RowElement>
+                                <RowElement>{row.serverTime}</RowElement>
+                                <RowElement>{row.positionId}</RowElement>
+                                <RowElement>{row.geofenceId}</RowElement>
+                                <RowElement>{row.type} </RowElement>
+                            </Row>
+                        ))}
+                    </Table>
+                </TableContainer>
+
+                : <p>No Events</p>}
+
+        </Container>
+    );
 };
 
 const Container = styled.div`
