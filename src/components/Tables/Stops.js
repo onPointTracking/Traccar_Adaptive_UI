@@ -82,7 +82,9 @@ const Stops = () => {
         <Container>
             <Header>
                 <HeaderTitle>Stops :</HeaderTitle>
-                <ShowInMapButton> Show In Map</ShowInMapButton>
+                {
+                    //<ShowInMapButton> Show In Map</ShowInMapButton>
+                }
             </Header>
             {queryRespond.length > 0 ?
 

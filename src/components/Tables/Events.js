@@ -87,7 +87,9 @@ const Events = () => {
         <Container>
             <Header>
                 <HeaderTitle>Events :</HeaderTitle>
-                <ShowInMapButton> Show In Map</ShowInMapButton>
+                {
+                    //<ShowInMapButton> Show In Map</ShowInMapButton>
+                }
             </Header>
             {queryRespond.length > 0 ?
                 <TableContainer>

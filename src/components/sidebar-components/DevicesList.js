@@ -14,7 +14,7 @@ const DevicesList = () => {
       dispatch(pushJsonData(await response.json()));
     }
   }, [pushJsonData]);
-
+  console.log("DevicesList" , state)
   return (
     <Container>
       <Header>
@@ -28,7 +28,6 @@ const DevicesList = () => {
             id={device.id}
             name={device.name}
             uniqueId={device.uniqueId}
-            speed={device.groupId}
             status={device.status}
           />
         ))

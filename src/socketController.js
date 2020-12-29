@@ -22,7 +22,6 @@ const SocketController = () => {
       const data = JSON.parse(event.data);
       if (data) {
         dispatch(pushActiveDevices(data.positions));
-        console.log("active devices ", data.positions);
       }
     };
   };

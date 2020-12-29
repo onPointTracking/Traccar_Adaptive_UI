@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
     MapContainer,
     TileLayer,
@@ -20,11 +20,9 @@ function displayIcons(positions_list) {
         <>
             {positions_list.length > 0 ? positions_list.map(
                 (position) => (
-                    <Marker position={position} icon={myIcon}>
+                    <Marker position={[position[0], position[1]]} icon={myIcon}>
                         <Popup>
-                            Hakim
-                            <br/>
-                            Location
+                            {position[2]}
                         </Popup>
                     </Marker>)
             ) : null}
@@ -32,34 +30,20 @@ function displayIcons(positions_list) {
     )
 }
 
-const leafletmap = () => {
-    const mapstyle = {
-        height: "100%",
-    };
+const leafletmap = ({preprocessedData}) => {
     const center = [35.5634, 4.189];
-    // get all data -- filter only online data -- pass it to function
-    // pass that function to useEffect for Real time UI update
-    const positions = [[35.5633, 6.178], [35.5335, 6.190], [35.5632, 6.189]]
-
-    // this data should be retrieved from the history variable
-    const points_set = [
-        [34.5634, 4.189],
-        [35.5634, 6.189],
-        [35.5634, 5.189],
-        [36.5634, 4.189],
-        [37.5634, 4.189],
-    ];
-
+    const mapstyle = {height: "100%"};
     return (
         <MapContainer style={mapstyle} center={center} zoom="7">
             <TileLayer
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {//<Polyline positions={points_set}/>
+            {
+                //<Polyline positions={points_set}/>
             }
             {
-                displayIcons(positions)
+                displayIcons(preprocessedData)
             }
         </MapContainer>
     );

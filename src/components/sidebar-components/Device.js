@@ -1,66 +1,66 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import styled from "styled-components";
-import { useDispatch, useSelector } from "react-redux";
-import { devicedetails, editdevice } from "../../features/appSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {devicedetails, editdevice} from "../../features/appSlice";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { Menu, MenuItem } from "@material-ui/core";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
-import { tochangedevice } from "../../features/devicesSlice";
-import { alldevices, home } from "../../features/appSlice";
+import {Menu, MenuItem} from "@material-ui/core";
+import PopupState, {bindTrigger, bindMenu} from "material-ui-popup-state";
+import {tochangedevice} from "../../features/devicesSlice";
+import {alldevices, home} from "../../features/appSlice";
 
-const Device = ({ id, name, status, speed, uniqueId }) => {
-  const dispatch = useDispatch();
+const Device = ({id, name, status, speed, uniqueId}) => {
+    const dispatch = useDispatch();
 
-  const HandleDelete = async () => {
-    // Delete Object Using it's Id
+    const HandleDelete = async () => {
+        // Delete Object Using it's Id
 
-    const url = "api/devices/" + id;
-    const response = await fetch(url, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-    });
-    if (response.ok) {
-      // go to all devices
-      dispatch(home());
-      dispatch(alldevices());
-    }
-  };
+        const url = "api/devices/" + id;
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"},
+        });
+        if (response.ok) {
+            // go to all devices
+            dispatch(home());
+            dispatch(alldevices());
+        }
+    };
 
-  const HandleEdit = async () => {
-    // Update ToChange variable
-    dispatch(tochangedevice({ id, name, uniqueId }));
-    // go to EditDevice Component
-    dispatch(editdevice());
-  };
+    const HandleEdit = async () => {
+        // Update ToChange variable
+        dispatch(tochangedevice({id, name, uniqueId}));
+        // go to EditDevice Component
+        dispatch(editdevice());
+    };
 
-  return (
-    <Container>
-      <DeviceInfo>
-        <h3
-          onClick={() => {
-            dispatch(devicedetails(id));
-          }}
-        >
-          {name}
-        </h3>
-        <p>Sattus: {status}</p>
-      </DeviceInfo>
-      <Speed>{speed ? speed : "0"} km/h</Speed>
-      {/* <MoreIcon/> */}
+    return (
+        <Container>
+            <DeviceInfo>
+                <h3
+                    onClick={() => {
+                        dispatch(devicedetails(id));
+                    }}
+                >
+                    {name}
+                </h3>
+                <p>Sattus: {status}</p>
+            </DeviceInfo>
+            {speed ? <Speed>speed km/h</Speed> : <></>}
+            {/*  <MoreIcon/> */}
 
-      <PopupState variant="popover" popupId="demo-popup-menu">
-        {(popupState) => (
-          <React.Fragment>
-            <MoreVertIcon {...bindTrigger(popupState)} />
-            <Menu {...bindMenu(popupState)}>
-              <MenuItem onClick={HandleEdit}>Edit</MenuItem>
-              <MenuItem onClick={HandleDelete}>Delete</MenuItem>
-            </Menu>
-          </React.Fragment>
-        )}
-      </PopupState>
-    </Container>
-  );
+            <PopupState variant="popover" popupId="demo-popup-menu">
+                {(popupState) => (
+                    <React.Fragment>
+                        <MoreVertIcon {...bindTrigger(popupState)} />
+                        <Menu {...bindMenu(popupState)}>
+                            <MenuItem onClick={HandleEdit}>Edit</MenuItem>
+                            <MenuItem onClick={HandleDelete}>Delete</MenuItem>
+                        </Menu>
+                    </React.Fragment>
+                )}
+            </PopupState>
+        </Container>
+    );
 };
 
 const Container = styled.div`
@@ -74,6 +74,7 @@ const Container = styled.div`
 
   &:hover {
     background-color: #f3f3f3;
+
     p {
       color: #29badf;
     }
@@ -84,12 +85,14 @@ const DeviceInfo = styled.div`
   flex-direction: column;
   padding: 0.6rem;
   cursor: pointer;
+
   h3 {
     font-family: "Roboto";
     font-size: 16px;
     font-weight: 300;
     color: #506054;
   }
+
   p {
     font-family: "Roboto";
     font-size: 12px;

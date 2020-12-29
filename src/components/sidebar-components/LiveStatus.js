@@ -1,24 +1,24 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { ActiveDevices } from "../../features/devicesSlice";
+import { Data ,ActiveDevices} from "../../features/devicesSlice";
 import Device from "./Device";
 import ProgressBarOne from "./ProgressBarOne";
 import ProgressBarTwo from "./ProgressBarTwo";
 const LiveStatus = () => {
   //import data
-  const state = useSelector(ActiveDevices);
+  const devices = useSelector(Data);
+  const activedev = useSelector(ActiveDevices)
+
   let activeDevices = [];
-  if (state) {
-    const devices = state.devices;
-    if (devices) {
+  if (devices) {
       for (let i = 0; i < devices.length; i++) {
-        if (devices[i].status === "on") {
-          activeDevices.push(devices[i]);
-        }
+        if (devices[i].status === "online") {
+          activeDevices.push(devices[i])
       }
     }
   }
+  console.log("active devices" , activedev)
 
   return (
     <Container>
@@ -30,12 +30,13 @@ const LiveStatus = () => {
       <DevicesList>
         <Title>Latest Active Devices :</Title>
         {activeDevices.length > 0 ? (
-          state.map((device) => (
+            activeDevices.map((device) => (
             <Device
-              key={device.deviceID}
-              name={device.devicename}
-              speed={device.speed}
-              activeSession={device.LastSession}
+              key={device.id}
+              id={device.id}
+              name={device.name}
+              uniqueId={device.uniqueId}
+              status={device.status}
             />
           ))
         ) : (
