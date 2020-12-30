@@ -36,6 +36,9 @@ export const AppSlice = createSlice({
     stops: (state) => {
       state.stat = 8;
     },
+    drawar: (state) => {
+      state.stat = 9;
+    },
     mainMap: (state) => {
       state.mainStat = 0;
     },
@@ -65,6 +68,7 @@ export const {
   mainEvents,
   mainHistory,
   mainStops,
+  drawar,
 } = AppSlice.actions;
 
 export const selectApp = (state) => state.App.stat;

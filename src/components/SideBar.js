@@ -32,6 +32,8 @@ function SideBarComponentSwitcher(state) {
             return null;
         case 8:
             return <StopsForm/>;
+        case 9:
+            return <HistoryForm/>
         default:
             return <LiveStatus/>;
     }

@@ -1,114 +1,125 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
-import {useSelector} from "react-redux";
+import {useSelector, useDispatch} from "react-redux";
 import {QueryData} from "../../features/devicesSlice";
 import moment from "moment";
+import {home, drawar, selectApp} from "../../features/appSlice";
+import LeafletMapDrawar from "../maps/leafletMapDrawar";
+
 
 function timeParser(time_name) {
-  const from = moment().subtract(1, "hour");
-  const to = moment();
-  let selectedFrom;
-  let selectedTo;
-  switch (time_name) {
-    case "today":
-      selectedFrom = moment().startOf("day");
-      selectedTo = moment().endOf("day");
-      break;
-    case "yesterday":
-      selectedFrom = moment().subtract(1, "day").startOf("day");
-      selectedTo = moment().subtract(1, "day").endOf("day");
-      break;
-    case "thisWeek":
-      selectedFrom = moment().startOf("week");
-      selectedTo = moment().endOf("week");
-      break;
-    case "previousWeek":
-      selectedFrom = moment().subtract(1, "week").startOf("week");
-      selectedTo = moment().subtract(1, "week").endOf("week");
-      break;
-    case "thisMonth":
-      selectedFrom = moment().startOf("month");
-      selectedTo = moment().endOf("month");
-      break;
-    case "previousMonth":
-      selectedFrom = moment().subtract(1, "month").startOf("month");
-      selectedTo = moment().subtract(1, "month").endOf("month");
-      break;
-    default:
-      selectedFrom = from;
-      selectedTo = to;
-      break;
-  }
-  return [selectedFrom, selectedTo]
+    const from = moment().subtract(1, "hour");
+    const to = moment();
+    let selectedFrom;
+    let selectedTo;
+    switch (time_name) {
+        case "today":
+            selectedFrom = moment().startOf("day");
+            selectedTo = moment().endOf("day");
+            break;
+        case "yesterday":
+            selectedFrom = moment().subtract(1, "day").startOf("day");
+            selectedTo = moment().subtract(1, "day").endOf("day");
+            break;
+        case "thisWeek":
+            selectedFrom = moment().startOf("week");
+            selectedTo = moment().endOf("week");
+            break;
+        case "previousWeek":
+            selectedFrom = moment().subtract(1, "week").startOf("week");
+            selectedTo = moment().subtract(1, "week").endOf("week");
+            break;
+        case "thisMonth":
+            selectedFrom = moment().startOf("month");
+            selectedTo = moment().endOf("month");
+            break;
+        case "previousMonth":
+            selectedFrom = moment().subtract(1, "month").startOf("month");
+            selectedTo = moment().subtract(1, "month").endOf("month");
+            break;
+        default:
+            selectedFrom = from;
+            selectedTo = to;
+            break;
+    }
+    return [selectedFrom, selectedTo]
 }
 
 const History = () => {
-  const [queryRespond, setQueryRespond] = useState([]);
-  const IncomingData = useSelector(QueryData);
-  let id = null;
-  let selectedFrom = null;
-  let selectedTo = null;
-  if (IncomingData.length > 0) {
-    id = IncomingData[0]
-    const time = timeParser(IncomingData[1])
-    selectedFrom = time[0]
-    selectedTo = time[1]
-  }
+    const dispatch = useDispatch()
+    const [showmap, setShowMap] = useState(false)
+    useEffect(() => {
+        setShowMap(false)
+    }, dispatch)
+    const [queryRespond, setQueryRespond] = useState([]);
+    const IncomingData = useSelector(QueryData);
+    let id = null;
+    let selectedFrom = null;
+    let selectedTo = null;
+    if (IncomingData.length > 0) {
+        id = IncomingData[0]
+        const time = timeParser(IncomingData[1])
+        selectedFrom = time[0]
+        selectedTo = time[1]
+    }
+    if (id) {
+        // GET EVENTS
+        const query = new URLSearchParams({
+            deviceId: id,
+            from: selectedFrom.toISOString(),
+            to: selectedTo.toISOString(),
+        });
 
-  if (id) {
-    // GET EVENTS
-    const query = new URLSearchParams({
-      deviceId: id,
-      from: selectedFrom.toISOString(),
-      to: selectedTo.toISOString(),
-    });
+        let promise = fetch(`/api/reports/route?${query.toString()}`, {
+            headers: {Accept: "application/json"},
+        })
+        promise.then((response) => {
+            if (response.ok) {
+                response.json().then(setQueryRespond);
+            }
+        })
+        promise.catch((err) => {
+            console.log(err)
+        });
+    }
+    return (
+        showmap ? <LeafletMapDrawar data={queryRespond} showtables={() => setShowMap(false)}/> :
+            <Container>
+                <Header>
+                    <HeaderTitle>History :</HeaderTitle>
+                    {queryRespond.length > 0 ?
+                        <ShowInMapButton onClick={() => {
+                            setShowMap(true)
+                        }}>
+                            Show In Map
+                        </ShowInMapButton> : null}
+                </Header>
+                {queryRespond.length > 0 ?
 
-    let promise = fetch(`/api/reports/route?${query.toString()}`, {
-      headers: {Accept: "application/json"},
-    })
-    promise.then((response) => {
-      if (response.ok) {
-        response.json().then(setQueryRespond);
-      }
-    })
-    promise.catch((err) => {
-      console.log(err)
-    });
-  }
+                    <TableContainer>
+                        <Table>
+                            <TableHeader>
+                                <TableHeaderElement>Time</TableHeaderElement>
+                                <TableHeaderElement>Lan</TableHeaderElement>
+                                <TableHeaderElement>Long</TableHeaderElement>
+                                <TableHeaderElement>Speed</TableHeaderElement>
+                                <TableHeaderElement>Address</TableHeaderElement>
+                            </TableHeader>
+                            {queryRespond.map((row) => (
+                                <Row>
+                                    <RowElement>{row.fixTime}</RowElement>
+                                    <RowElement>{row.latitude}</RowElement>
+                                    <RowElement>{row.longitude}</RowElement>
+                                    <RowElement>{row.speed}</RowElement>
+                                    <RowElement>{row.address}</RowElement>
+                                </Row>
+                            ))}
+                        </Table>
+                    </TableContainer>
+                    : <p>No History</p>}
 
-
-  return (
-    <Container>
-      <Header>
-        <HeaderTitle>History :</HeaderTitle>
-        <ShowInMapButton> Show In Map</ShowInMapButton>
-      </Header>
-      {queryRespond.length > 0 ?
-
-          <TableContainer>
-        <Table>
-          <TableHeader>
-            <TableHeaderElement>Time</TableHeaderElement>
-            <TableHeaderElement>Lan</TableHeaderElement>
-            <TableHeaderElement>Long</TableHeaderElement>
-            <TableHeaderElement>Speed</TableHeaderElement>
-            <TableHeaderElement>Address</TableHeaderElement>
-          </TableHeader>
-          {queryRespond.map((row) => (
-            <Row>
-              <RowElement>{row.fixTime}</RowElement>
-              <RowElement>{row.latitude}</RowElement>
-              <RowElement>{row.longitude}</RowElement>
-              <RowElement>{row.speed}</RowElement>
-              <RowElement>{row.address}</RowElement>
-            </Row>
-          ))}
-        </Table>
-      </TableContainer>
-          : <p>No History</p>}
-
-    </Container>
-  );
+            </Container>
+    );
 };
 
 const Container = styled.div`
