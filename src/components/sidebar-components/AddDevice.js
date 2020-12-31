@@ -50,15 +50,6 @@ const AddDevice = () => {
   const handleSave = async (event) => {
     event.preventDefault();
     const url = "api/devices";
-    console.log({
-      name: name,
-      uniqueId: id,
-      groupId: group,
-      phone: phone,
-      model: model,
-      contact: contact,
-      category: categorie,
-    });
     const response = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

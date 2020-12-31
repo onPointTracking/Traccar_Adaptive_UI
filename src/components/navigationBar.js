@@ -1,18 +1,12 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import {
   home,
   alldevices,
   events,
   history,
-  diagrmas,
   stops,
-  mainEvents,
-  mainHistory,
-  mainMap,
-  mainStops,
 } from "../features/appSlice";
 
 const NavigationBar = () => {

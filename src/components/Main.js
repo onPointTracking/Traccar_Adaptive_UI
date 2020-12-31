@@ -5,7 +5,6 @@ import {selectApp} from "../features/appSlice";
 // My Maps
 import Leafletmap from "./maps/leafletmap";
 import MapGL from "./maps/mapglmap";
-import LeafletMapDrawar from "./maps/leafletMapDrawar";
 // My Tables
 import Events from "./Tables/Events";
 import History from "./Tables/History";
@@ -39,10 +38,6 @@ const MapsContainer = () => {
             }
         }
     }
-
-    const handleMapChange = (event) => {
-        SetwitchMap(event.target.value);
-    };
 
     //button style
     const selectStyle = {
@@ -78,8 +73,6 @@ function MainComponentSwitcher(state) {
             return <History/>;
         case 8:
             return <Stops/>;
-        case 9:
-            return <LeafletMapDrawar/>
         default:
             return <MapsContainer/>;
     }

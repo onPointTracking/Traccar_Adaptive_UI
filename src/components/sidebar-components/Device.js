@@ -1,6 +1,6 @@
-import React, {useState} from "react";
+import React from "react";
 import styled from "styled-components";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {devicedetails, editdevice} from "../../features/appSlice";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {Menu, MenuItem} from "@material-ui/core";
@@ -10,10 +10,7 @@ import {alldevices, home} from "../../features/appSlice";
 
 const Device = ({id, name, status, speed, uniqueId}) => {
     const dispatch = useDispatch();
-
     const HandleDelete = async () => {
-        // Delete Object Using it's Id
-
         const url = "api/devices/" + id;
         const response = await fetch(url, {
             method: "DELETE",

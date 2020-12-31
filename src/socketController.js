@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { connect } from "react-redux";
 import { pushActiveDevices, pushJsonData } from "./features/devicesSlice";
-import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useEffectAsync } from "./reactHelper";
 import { HandleLogin, Session } from "./features/loginSlice";
@@ -27,8 +26,6 @@ const SocketController = () => {
   };
 
   useEffectAsync(async () => {
-    console.log("Data Updated running");
-
     // if authontification is not null do update + querys
     // else push login
     if (session) {

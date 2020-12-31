@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffectAsync } from "../../reactHelper";
@@ -14,7 +14,6 @@ const DevicesList = () => {
       dispatch(pushJsonData(await response.json()));
     }
   }, [pushJsonData]);
-  console.log("DevicesList" , state)
   return (
     <Container>
       <Header>

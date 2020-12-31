@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import {Data, runquery} from "../../features/devicesSlice";
-import {stops ,newdevice} from "../../features/appSlice";
+import {stops, newdevice} from "../../features/appSlice";
 
 const StopsForm = () => {
     // [X] get all devices and set value of options to id

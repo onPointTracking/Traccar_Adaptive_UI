@@ -1,50 +1,49 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import styled from "styled-components";
-import { Data ,ActiveDevices} from "../../features/devicesSlice";
+import {Data, ActiveDevices} from "../../features/devicesSlice";
 import Device from "./Device";
 import ProgressBarOne from "./ProgressBarOne";
 import ProgressBarTwo from "./ProgressBarTwo";
+
 const LiveStatus = () => {
-  //import data
-  const devices = useSelector(Data);
-  const activedev = useSelector(ActiveDevices)
+    //import data
+    const devices = useSelector(Data);
+    const activedev = useSelector(ActiveDevices)
 
-  let activeDevices = [];
-  if (devices) {
-      for (let i = 0; i < devices.length; i++) {
-        if (devices[i].status === "online") {
-          activeDevices.push(devices[i])
-      }
+    let activeDevices = [];
+    if (devices) {
+        for (let i = 0; i < devices.length; i++) {
+            if (devices[i].status === "online") {
+                activeDevices.push(devices[i])
+            }
+        }
     }
-  }
-  console.log("active devices" , activedev)
-
-  return (
-    <Container>
-      <Graphs>
-        <Title>Real Time Rapport :</Title>
-        <ProgressBarOne />
-        <ProgressBarTwo />
-      </Graphs>
-      <DevicesList>
-        <Title>Latest Active Devices :</Title>
-        {activeDevices.length > 0 ? (
-            activeDevices.map((device) => (
-            <Device
-              key={device.id}
-              id={device.id}
-              name={device.name}
-              uniqueId={device.uniqueId}
-              status={device.status}
-            />
-          ))
-        ) : (
-          <Noitems>No Online Devices</Noitems>
-        )}
-      </DevicesList>
-    </Container>
-  );
+    return (
+        <Container>
+            <Graphs>
+                <Title>Real Time Rapport :</Title>
+                <ProgressBarOne/>
+                <ProgressBarTwo/>
+            </Graphs>
+            <DevicesList>
+                <Title>Latest Active Devices :</Title>
+                {activeDevices.length > 0 ? (
+                    activeDevices.map((device) => (
+                        <Device
+                            key={device.id}
+                            id={device.id}
+                            name={device.name}
+                            uniqueId={device.uniqueId}
+                            status={device.status}
+                        />
+                    ))
+                ) : (
+                    <Noitems>No Online Devices</Noitems>
+                )}
+            </DevicesList>
+        </Container>
+    );
 };
 
 const Container = styled.div`
@@ -70,7 +69,7 @@ const DevicesList = styled.div`
 
 const Title = styled.p`
   font-family: "Roboto";
-  font-size: 14 px;
+  font-size: 14px;
   font-weight: bold;
   color: #3e3e46;
 `;

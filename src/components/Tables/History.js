@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {useSelector, useDispatch} from "react-redux";
 import {QueryData} from "../../features/devicesSlice";
 import moment from "moment";
-import {home, drawar, selectApp} from "../../features/appSlice";
 import LeafletMapDrawar from "../maps/leafletMapDrawar";
 
 

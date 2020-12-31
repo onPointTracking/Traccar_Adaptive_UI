@@ -33,7 +33,6 @@ const Login = () => {
       // push login history
       history.push("/");
     } else {
-      console.log("not connected to the server");
       setPassword("");
     }
   };
