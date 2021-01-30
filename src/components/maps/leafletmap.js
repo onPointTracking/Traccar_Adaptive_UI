@@ -30,7 +30,7 @@ function displayIcons(positions_list) {
 }
 
 const leafletmap = ({preprocessedData}) => {
-    const center = [35.5634, 4.189];
+    const center = [39.8283, -98.5795];
     const mapstyle = {height: "100%"};
     return (
         <MapContainer style={mapstyle} center={center} zoom="7">
